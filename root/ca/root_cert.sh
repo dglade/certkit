@@ -1,22 +1,22 @@
 #!/bin/bash
 
-echo 'generating new root private key'
+echo 'generating new root private key with length 4096 at private/ca.key.pem'
 openssl genrsa -aes256 -out private/ca.key.pem 4096
 
-echo 'generating new root certificate'
+echo 'generating new root certificate at certs/ca.cert.pem'
 openssl req -config openssl.cnf -key private/ca.key.pem -new -x509 -days 7300 -sha256 -extensions v3_ca -out certs/ca.cert.pem
 
 echo 'verifying root certificate'
 openssl x509 -noout -text -in certs/ca.cert.pem
 
-echo 'generating new intermediate private key'
+echo 'generating new intermediate private key with length 4096 at intermediate/private/intermediate.key.pem'
 openssl genrsa -aes256 -out intermediate/private/intermediate.key.pem 4096
 
 echo 'generating new intermediate csr'
 openssl req -config intermediate/openssl.cnf -new -sha256 -key intermediate/private/intermediate.key.pem -out intermediate/csr/intermediate.csr.pem
 
 echo 'generating new intermediate certificate'
-openssl req -config intermediate/openssl.cnf -new -sha256 -key intermediate/private/intermediate.key.pem -out intermediate/csr/intermediate.csr.pem
+openssl ca -config openssl.cnf -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -in intermediate/csr/intermediate.csr.pem -out intermediate/certs/intermediate.cert.pem
 
 echo 'verify intermediate certificate'
 openssl x509 -noout -text -in intermediate/certs/intermediate.cert.pem
@@ -39,12 +39,11 @@ openssl ca -config intermediate/openssl.cnf -extensions usr_cert -days 375 -note
 
 echo 'verify server-side certificate'
 openssl x509 -noout -text -in intermediate/certs/server.final.cert.pem
-openssl verify -CAfile intermediate/certs/ca-chain.cert.pemintermediate/certs/server.final.cert.pem
+openssl verify -CAfile intermediate/certs/ca-chain.cert.pem intermediate/certs/server.final.cert.pem
 
 echo 'verify client certificate'
-echo 'verify server-side certificate'
 openssl x509 -noout -text -in intermediate/certs/client.final.cert.pem
-openssl verify -CAfile intermediate/certs/ca-chain.cert.pemintermediate/certs/client.final.cert.pem
+openssl verify -CAfile intermediate/certs/ca-chain.cert.pem intermediate/certs/client.final.cert.pem
 
 # print('generating new root private key')
 # keyfile_name = raw_input('Enter a keyfile name: ')
