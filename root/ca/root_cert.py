@@ -57,3 +57,4 @@ if __name__ == '__main__':
 # echo 'verify server-side certificate'
 # openssl x509 -noout -text -in intermediate/certs/client.final.cert.pem
 # openssl verify -CAfile intermediate/certs/ca-chain.cert.pemintermediate/certs/client.final.cert.pem
+

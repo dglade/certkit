@@ -29,4 +29,10 @@ clean-test:
 clean-certs:
 	find . -name '*.pem' -exec rm -f {} +
 	find . -name '*.old' -exec rm -f {} +
+	find . -name '*.attr' -exec rm -f {} +
+	find . -name 'index.txt' -exec rm -f {} +
+	touch root/ca/index.txt
+	touch root/ca/intermediate/index.txt
+	echo 1000 > root/ca/serial
+	echo 1000 > root/ca/intermediate/serial
 

@@ -45,10 +45,3 @@ echo 'verify client certificate'
 openssl x509 -noout -text -in intermediate/certs/client.final.cert.pem
 openssl verify -CAfile intermediate/certs/ca-chain.cert.pem intermediate/certs/client.final.cert.pem
 
-# print('generating new root private key')
-# keyfile_name = raw_input('Enter a keyfile name: ')
-
-# print('generating a new root certificate')
-# certfile_name = raw_input('Enter a certificate file name: ')
-
-# print('verifying certificate {}'.format(certfile_name)
